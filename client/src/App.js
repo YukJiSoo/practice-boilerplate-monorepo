@@ -6,7 +6,7 @@ const App = () => {
 	const [hello, setHello] = useState({});
 
 	async function fetchData() {
-		const res = await fetch("http://localhost:4000", {
+		const res = await fetch("http://localhost:4000/api", {
 			crossDomain: true,
 			method: "GET",
 			headers: { "Content-Type": "application/json" }
@@ -28,7 +28,7 @@ const App = () => {
 			{hasError ? (
 				<span>Has error: {JSON.stringify(hasError)}</span>
 			) : (
-				<span>{JSON.stringify(hello)}</span>
+				<span>Complete {JSON.stringify(hello)}</span>
 			)}
 		</div>
 	);
