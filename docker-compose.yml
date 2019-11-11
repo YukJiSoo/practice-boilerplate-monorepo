@@ -1,0 +1,41 @@
+version: "3.7" # compose file 규격
+
+services: # 서비스는 하나의 컨테이너
+    server:
+        container_name: server # 컨테이너 이름
+        build: # build 정보를 담고 있는 option
+            dockerfile: Dockerfile.dev # 개발용 docker image 빌드 파일 설정
+            context: ./server # docker 파일이 위치하는 디렉토리
+        ports:
+            - "4000:4000" # 연결할 포트 호스트:컨테이너
+        volumes:
+            - ./server/:/usr/src/app # server 디렉토리의 변경사항이 즉각 반영되도록 volume 설정
+            - /usr/src/app/node_modules
+        networks: # 각 컨테이너를 연결하는 네트워크 설정
+            - backend
+    client:
+        container_name: client
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./client
+        volumes:
+            - ./client/:/usr/src/app
+            - /usr/src/app/node_modules
+        networks:
+            - backend
+    nginx:
+        container_name: proxy
+        restart: always # 실행 중단되는 경우 컨테이너를 알아서 재시작하게 함. ready 되지 않은 컨테이너로 인해 컨테이너가 죽는 경우 방지.
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./proxy
+        volumes:
+            - ./proxy/nginx.conf:/etc/nginx/nginx.conf # Reverse Proxy 서버 역할을 하는 nginx
+        ports:
+            - "80:80"
+        networks:
+            - backend
+
+networks: # 컨테이너간의 연결 통로를 정의하는 option
+    backend:
+        driver: bridge # 가장 기본적인 네트워크 연결 방식
