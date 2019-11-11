@@ -4,6 +4,16 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 var app = express();
+var mongoose = require("mongoose");
+var db = mongoose.connection;
+db.on("error", console.error);
+db.once("open", function() {
+	console.log("Connected to mongod server");
+});
+
+mongoose.connect("mongodb://mongo/todo");
+
+var Todo = require("./model");
 
 const cors = require("cors");
 
@@ -28,9 +38,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get("/api", (req, res) => {
-	console.log(req);
-	res.json({ hello: "hello" });
+app.get("/api", function(req, res, next) {
+	return Todo.find({}).then(todos => res.send(todos));
+});
+
+app.post("/api", function(req, res, next) {
+	const todo = Todo();
+	const name = req.body.name;
+
+	todo.name = name;
+
+	return todo
+		.save()
+		.then(todo => res.send(todo))
+		.catch(error => res.status(500).send({ error }));
 });
 
 // catch 404 and forward to error handler
