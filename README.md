@@ -2,11 +2,15 @@
 
 docker compose를 이용한 개발 및 배포 환경 boilerplate
 
+<br>
+
 ### 🌈 step1
 
 -   json data를 주고받는 client/server 구조 구현
 -   client: CRA
 -   server: express-generator
+
+<br>
 
 ### 🌈 step2
 
@@ -21,3 +25,10 @@ docker-compose up --build
 docker-compose up -d
 
 ```
+
+<br>
+
+### 🌈 step3
+
+-   docker-compose.yml 에 mongodb 추가
+-   실행명령어 동일
