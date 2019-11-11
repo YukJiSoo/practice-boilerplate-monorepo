@@ -1,0 +1,17 @@
+# 어떤 이미지에서 새로운 이미지를 생성할지 선언
+FROM node:12.13.0
+
+# /usr/src/app를 wokrdir로 설정
+WORKDIR /usr/src/app
+# 현재 디렉토리에서 package*.json형식의 파일을 복사
+COPY package*.json ./
+
+# dependency 설치
+RUN npm install
+
+# 컨테이너 디렉토리에 현재 디렉토리의 소스파일 복사
+COPY . .
+
+# 가상머신에 port open
+EXPOSE 4000
+CMD [ "npm", "start" ]

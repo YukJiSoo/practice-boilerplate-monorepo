@@ -7,7 +7,7 @@ var app = express();
 
 const cors = require("cors");
 
-const whitelist = ["http://localhost:3000"];
+const whitelist = ["http://localhost:3000", "http://localhost"];
 
 const corsOptions = {
 	origin: function(origin, callback) {
@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
 	console.log(req);
 	res.json({ hello: "hello" });
 });
