@@ -1,4 +1,4 @@
-language: node_js
+language: node_js # 언어
 
 node_js:
     - 12
@@ -11,21 +11,36 @@ services:
 branches:
     only:
         - master
+env:
+    global:
+        - DOCKER_USER=wltn3231
+        - DOCKER_PASS=mypassword
 
 jobs:
     include:
-        - stage: "TEST"
-          name: "CLIENT TEST"
+        - stage: "Tests"
+          name: "Client Test"
           before_install:
               - cd ./client
           install:
               - npm install
           script:
               - npm run test
-        - name: "SERVER TEST"
+        - name: "Server Test"
           before_install:
               - cd ./server
           install:
               - npm install
           script:
               - npm run test
+        - stage: "DEPLOY"
+          name: "Client Deploy"
+          if: type = push AND branch = master
+          before_install:
+              - sudo apt-get install sshpass
+          before_script:
+              - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          script:
+              - docker build -t "$DOCKER_USERNAME"/"$DOCKER_FRONT_REPO":latest ./front
+              - docker push "$DOCKER_USERNAME"/"$DOCKER_FRONT_REPO":latest
+              - sshpass -p "$DEVELOPER_PASSWORD" ssh -o StrictHostKeyChecking=no developer@"$FRONT_IP" "/home/execute.sh"
