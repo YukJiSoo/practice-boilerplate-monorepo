@@ -1,0 +1,64 @@
+language: node_js
+
+node_js:
+    - 12
+
+cache: npm
+
+services:
+    - docker
+
+branches:
+    only:
+        - master
+
+jobs:
+    include:
+        - stage: "TEST"
+          name: "CLIENT TEST"
+          before_install:
+              - cd ./client
+          install:
+              - npm install
+          script:
+              - |
+                  if [ $TRAVIS_BRANCH == "master" ]; then
+                    npm run test:prod
+                  else
+                    npm run test:dev
+                  fi
+        - name: "SERVER TEST"
+          before_install:
+              - cd ./server
+          install:
+              - npm install
+          script:
+              - |
+                  if [ $TRAVIS_BRANCH == "master" ]; then
+                    npm run test:prod
+                  else
+                    npm run test:dev
+                  fi
+
+        - stage: "MASTER DEPLOY"
+          name: "DEPLOY CLIENT"
+          if: type = push AND branch = master
+          before_install:
+              - sudo apt-get install sshpass
+          before_script:
+              - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          script:
+              - docker build -t "$DOCKER_USERNAME"/"$DOCKER_FRONT_REPO":latest ./front
+              - docker push "$DOCKER_USERNAME"/"$DOCKER_FRONT_REPO":latest
+              - sshpass -p "$DEVELOPER_PASSWORD" ssh -o StrictHostKeyChecking=no developer@"$FRONT_IP" "/home/execute.sh"
+
+        - name: "DEPLOY SERVER"
+          if: type = push AND branch = master
+          before_install:
+              - sudo apt-get install sshpass
+          before_script:
+              - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          script:
+              - docker build -t "$DOCKER_USERNAME"/"$DOCKER_BACK_REPO":latest ./back
+              - docker push "$DOCKER_USERNAME"/"$DOCKER_BACK_REPO":latest
+              - sshpass -p "$DEVELOPER_PASSWORD" ssh -o StrictHostKeyChecking=no developer@"$BACK_IP" "/home/execute.sh"
