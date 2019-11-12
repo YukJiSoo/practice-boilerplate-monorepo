@@ -32,3 +32,11 @@ docker-compose up -d
 
 -   docker-compose.yml 에 mongodb 추가
 -   실행명령어 동일
+
+<br>
+
+### 🌈 step4
+
+-   travis를 이용한 CI/CD(delivery) 적용
+-   master에 PR을 보내면 travis CI server에 요청
+-   CD는 DockerHub에 새로운 이미지를 push하는 것 까지 수행
