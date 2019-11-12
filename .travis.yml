@@ -13,11 +13,12 @@ env:
         - DOCKER_USER=wltn3231
         - secure: hg/QsOq1XukOsPvqwWC6kz7cB6/tClnFkoAfXYu0ZQMk13ht6Ci+JjgdhpxEmE3UN5x9gNgeShwfJXheNtYbakB4AFs99sfCTEb+ScO7yeyDqHWGCiCwstmlFuQeqgCohFBI0l32Wn19m106krfeRbWKHK+9f8cIVKc51HdOBJesDN13Ba9+P8raq4UHY0/TYcAOdUMMWadqsol4SfAOIsxXnhCMG+S4p2JyIjQfy+ONdFhocecQPrEyGpW2HC1SklXSYVUtmn+F6IwyUadpw581r9QsC2r1fjDlPFEofWM6sly5DkiN0cJadbXYl/ua/i7xWtkljOhDOBxQSwDzDoD0uKoiMf8F2OjQleyvdpx/NZeQ+3548dYDeLrLTGsRKQvQwFIQCVwGvWEe55JA0S1oOUqnRrqkKuBKwYKDabytnXkdRWxiOYFkggJOR6eDL7o/Dp4nOv9sFNJlc1RRVewQKoKDkgyV1edJoB53FeitqhSUChu7hPokQrFnxTfCB3t8v1HD2cO28sQH3qPP4MYiWJHL+F1YPnpdQKOOoEqgH94xM/D1tDMe4RRSahjGbeB6lJ1y9YvMOpifgWSeOGGLM5YPgSs2PM/maTcCpzdNXnMGmZqaQVYoZMV4eOy8QE29ZIJAFyYgmJDTnT/dCGRSSV7ph6/AMnY1yFTNjVA=
 
+script:
+    - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+    - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+
 jobs:
     include:
-        script:
-              - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-              - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
         - stage: "Tests"
           name: "Client Test"
           before_install:
