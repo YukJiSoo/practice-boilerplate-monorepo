@@ -15,7 +15,7 @@ env:
 
 jobs:
     include:
-        script:
+        - script:
               - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
               - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
         - stage: "Tests"
@@ -26,8 +26,6 @@ jobs:
               - npm install
           script:
               - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
-              - docker build --tag wltn3231/test-client:v2 .
-              - docker push wltn3231/test-client:v2
         - name: "Server Test"
           before_install:
               - cd ./server
@@ -35,5 +33,19 @@ jobs:
               - npm install
           script:
               - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
-              - docker build --tag wltn3231/test-server:v2 .
+
+        - stage: "Deploy"
+          name: "Deploy Client"
+          before_script:
+              - cd ./server
+              - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          script:
+              - docker build -t wltn3231/test-client:v2 .
+              - docker push wltn3231/test-client:v2
+        - name: "Deploy Server"
+          before_script:
+              - cd ./server
+              - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+          script:
+              - docker build -t wltn3231/test-server:v2 .
               - docker push wltn3231/test-server:v2
