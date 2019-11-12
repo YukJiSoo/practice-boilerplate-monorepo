@@ -1,4 +1,4 @@
-language: node_js # 언어
+language: node_js
 
 node_js:
     - 12
@@ -9,12 +9,13 @@ services:
     - docker
 
 branches:
-    only:
-        - master
+  only:
+  - master
+
 env:
-    global:
-        - DOCKER_USER=wltn3231
-        - DOCKER_PASS=mypassword
+  global:
+  - DOCKER_USER=wltn3231
+  - secure: epmdSuQf0e+j25l7Hn37B7TyZv8n0G1FSr44auhuqSf7ryA8aGrPfDFJD4pMY4S/S8EAOXK+LYZHjQPEde7mgihwgeAIoxePmFJHy5s7Q0y7fN9SArC8waWIXy0gYxiF24mVCOQ2pUQ27m2t61uegJCU6mzYFgO1g8FFaeJRuxcFtyfgUN1wvkB5krDzt77pFIVfPzMZ646Ok5BcgTuggBuykILSThqF3SwmELE9XpPh1HXuGA9pEHJWQaJiLoYuJPA91KNqf7TV+pmkfJFeka4xD3qvA+TagORQYNKP5GD3GJjIr6dc4zpZkepRPNmojxWeEBSJzJEXt84kzLIQzUsQybi0fopgrLDKK2g2FYDRkbOC+mVNTHq3MHPU5wxgTJFTfovLSGrs51Bm43UHwg8mBWVKwOXXtncpHgMgg5H228xw4ScjtkaHy6QDYMD9UC2KsxAK9TBobiAjAwVFkB2FEgGafJJguZDGSbmh373CE1mkSRV9YHTzYKVKrKbegoQcXJ4MhQ3AZN+2wPNnTZfMeBBpbMMueDPRjkqSWR29zM+x0FyvdkJLLMDTGoyi6lYop+bXd8I2EFX0+xtuyKzaAtEcC40ZiiRpoz5/k9hFUIe20RJELvNV6Qz3ESqJImu/d3TeCxkMzpTFixe/FjE7034d3D9Klp7nGMVzuvw=
 
 jobs:
     include:
@@ -29,6 +30,8 @@ jobs:
               - npm install
           script:
               - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+              - docker build --tag wltn3231/test-client:v2 .
+              - docker push wltn3231/test-client:v2
         - name: "Server Test"
           before_install:
               - cd ./server
@@ -36,3 +39,18 @@ jobs:
               - npm install
           script:
               - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+              - docker build --tag wltn3231/test-server:v2 .
+              - docker push wltn3231/test-server:v2
+        - stage: "Deploy"
+          name: "Deploy Client"
+          before_script:
+              - cd ./client
+          script:
+              - docker build -t wltn3231/test-client:v2 .
+              - docker push wltn3231/test-client:v2
+        - name: "Deploy Server"
+          before_script:
+              - cd ./server
+          script:
+              - docker build -t wltn3231/test-server:v2 .
+              - docker push wltn3231/test-server:v2
