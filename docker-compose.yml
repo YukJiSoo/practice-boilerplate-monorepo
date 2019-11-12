@@ -1,6 +1,6 @@
 version: "3.7" # compose file 규격
 
-services: # 서비스는 하나의 컨테이너
+services: # 서비스는 컨테이너 모음
     server:
         container_name: server # 컨테이너 이름
         build: # build 정보를 담고 있는 option
