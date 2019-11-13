@@ -4,9 +4,6 @@ node_js:
 cache: npm
 services:
   - docker
-branches:
-  only:
-    - master
 env:
   global:
     - DOCKER_USERNAME=wltn3231
@@ -14,6 +11,11 @@ env:
 jobs:
   include:
     - stage: Tests
+      script:
+        - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH;
+          else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+        - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
+      if: branch = master OR branch = server-master
       env:
         - SKIP_PREFLIGHT_CHECK=true
       name: Cocode Client Test
@@ -31,18 +33,18 @@ jobs:
         - npm install
       script:
         - npm run test
-    - stage: Deploy
-      name: Deploy Client
-      before_script:
-        - cd ./cocode
-        - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-      script:
-        - docker build -t wltn3231/test-client:v3 .
-        - docker push wltn3231/test-client:v3
-    - name: Deploy Server
-      before_script:
-        - cd ./api-server
-        - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-      script:
-        - docker build -t wltn3231/test-server:v3 .
-        - docker push wltn3231/test-server:v3
+    # - stage: Deploy
+    #   name: Deploy Client
+    #   before_script:
+    #     - cd ./cocode
+    #     - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+    #   script:
+    #     - docker build -t wltn3231/test-client:v3 .
+    #     - docker push wltn3231/test-client:v3
+    # - name: Deploy Server
+    #   before_script:
+    #     - cd ./api-server
+    #     - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+    #   script:
+    #     - docker build -t wltn3231/test-server:v3 .
+    #     - docker push wltn3231/test-server:v3
