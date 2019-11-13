@@ -21,6 +21,8 @@ jobs:
         - SKIP_PREFLIGHT_CHECK=true
       name: Client Test
       script:
+        - echo "no=$TRAVIS_PULL_REQUEST_BRANCH"
+        - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
         - echo "client test"
 
     - name: API Server Test
