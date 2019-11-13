@@ -34,14 +34,14 @@ jobs:
     - stage: Deploy
       name: Deploy Client
       before_script:
-        - cd ./client
+        - cd ./cocode
         - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
       script:
         - docker build -t wltn3231/test-client:v3 .
         - docker push wltn3231/test-client:v3
     - name: Deploy Server
       before_script:
-        - cd ./server
+        - cd ./api-server
         - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
       script:
         - docker build -t wltn3231/test-server:v3 .
