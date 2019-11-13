@@ -1,53 +1,33 @@
 language: node_js
+
 node_js:
-    - 12
+  - 12
+
 cache: npm
+
 services:
-    - docker
+  - docker
+
 branches:
-    only:
-        - master
-env:
-    global:
-        - DOCKER_USERNAME=wltn3231
-        - secure: JmPLU2wmgNCj6GfOYKP0Wmo2IJEMZ/fwcw/fy4QBNGsB3IDe8zVX67AVDCQEZVUqsW4UjeRSjJtlwrcCvDPA1ljj5kv6WLydKwaTT490FELbQERAT+lw/zcYGy4mvs7iX2EqjaPD7u4t4TtUJRyt2iGVRQ+BPaMXCfzbYm9m1AdnoNWj/4xE9v5P+9AZHSfRvWckhdcGOotpA0VzQY48PvW6FyL8eBimmSBM2rdoHajx+vIkFDlzeC2GL/xqSRU3GDeb/nbNvFAuRZM6ANWiKLzp66MVfGEui2lZMYPy4qHBaY0jlgS+SLqWLawyZLrBNYzwHX5kN7qLies2HX3TzW3ZWIh8S5clI4nxelVr085U1+dZfuyWIxPLPDFfS2D3n2mEVk5BsISkjZyje77OP0yBk4LbicYhvy6kPlA6XeN+xnZbGJfGsw7JP7zSMpH+GZ1zghZ6bBE813YMMjmo9m6JEoGAAEWeu/pRwcwBOEje+u5qyMMu8EXgSkL4lt2MWtDTfgT7NV2glznPXMzvB9cV4k1wwWaSvs3PbTP3xS1sJ9AwgwOlpHWwoYKvlR2ym+9CsYm2Hk5qvaVnQTy/t8FpbVvu05TPAZnLbUZbHKB0lRC+zGY98oUJ3Q3KOEQTsm6pvSfavL8uo1U2jzOLzGkY2uy5VmpJtsIFyF9INGA=
+  only:
+    - release
+
 jobs:
-    include:
-        - stage: Tests
-          name: Client Test
-          before_install:
-              - cd ./client
-          install:
-              - npm install
-          before_script:
-              - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH;
-                else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-              - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
-          script:
-              - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
-        - name: Server Test
-          before_install:
-              - cd ./server
-          install:
-              - npm install
-          before_script:
-              - export BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH;
-                else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
-              - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
-          script:
-              - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, PR=$PR, BRANCH=$BRANCH"
-        - stage: Deploy
-          name: Deploy Client
-          before_script:
-              - cd ./server
-              - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-          script:
-              - docker build -t wltn3231/test-client:v2 .
-              - docker push wltn3231/test-client:v2
-        - name: Deploy Server
-          before_script:
-              - cd ./server
-              - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-          script:
-              - docker build -t wltn3231/test-server:v2 .
-              - docker push wltn3231/test-server:v2
+  include:
+    - stage: Tests
+      env:
+        - SKIP_PREFLIGHT_CHECK=true
+      name: Cocode Client Test
+      before_install:
+        - cd ./cocode
+      install:
+        - yarn install
+      script:
+        - yarn jest
+    - name: API Server Test
+      before_install:
+        - cd ./api-server
+      install:
+        - npm install
+      script:
+        - npm run test
