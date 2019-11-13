@@ -3,6 +3,7 @@ version: "3.7"
 services:
   api-server:
     container_name: api-server
+    restart: always
     build:
       dockerfile: Dockerfile.dev
       context: ./api-server
@@ -16,6 +17,7 @@ services:
 
   cocode-client:
     container_name: cocode-client
+    restart: always
     build:
       dockerfile: Dockerfile.dev
       context: ./cocode

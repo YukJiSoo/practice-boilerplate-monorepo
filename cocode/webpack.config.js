@@ -4,7 +4,7 @@ const webpack = require('webpack');
 module.exports = {
 	devtool: 'cheap-module-eval-source-map',
 	mode: 'development',
-	entry: __dirname + '/src/index.js',
+	entry: ['@babel/polyfill', __dirname + '/src/index.js'],
 	output: {
 		path: __dirname + '/public',
 		filename: 'bundle.js'
