@@ -1,17 +1,16 @@
 language: node_js
-
 node_js:
   - 12
-
 cache: npm
-
 services:
   - docker
-
 branches:
   only:
-    - release
-
+    - master
+env:
+  global:
+    - DOCKER_USERNAME=wltn3231
+    - secure: qudprqD0YV1Q8UeH7cT1dumQI4UzqdCJrtj3TDUGSvJ5zgkTlxDv0DIzXXS39ASWYHGs3iB2/yl/yipY24Z6DnbjVLR+dxeoZqNqckf6ZXdvEq+3NUVkCPUK61b9tMDQOH2Le4PYsQ661XpLxwBLD2hkw0UeYL4lxLwxCVFXY0m9rSwTiQeVow0xWmn4FlRBlc/4SjxIijfbLo5wqLxrKoXGmGaa75EZKAWyB9ayT0wS47kLoJrqbi4nrYIK8nbQY16Da82+FDjIJoq1zKMbKvOkcBCKE0XHodfY9MP81h4tawVxSu2yB/iKAyg0OrJC96AXodM2H8zP8F8g71IXYMtz1vy6ulu2VpfWoEC+nTI5xUIHfLVNepNtbQAFP0/gT9TMVSYVYQUNHs+6dxBI3CU505fo4UDMOh81rFaR7E2UoX9rf83iaoHtshI/jtTogoZ+VNn8cLRTEXmYn/42/Ik4TEdR+AU2Yb4d+u4evXvNxRtK7vwTEqVLp+ZG/PbW5IORApdLiwlH0Ut4oItMg+5vw7DTRQnz3XUM6/d4yRLCBGX2xcsfzythoz6CM8NGOH1DdscZ+zrjfLISbUhNDjwglUMiE5xSorcipnemiRmAcXqRa1aLb9LG1Kg3D9svvaogW0MsK6WHWG0zkz1mpTs5i3Fx9VqjvRHFeDyKOo8=
 jobs:
   include:
     - stage: Tests
@@ -24,6 +23,7 @@ jobs:
         - yarn install
       script:
         - yarn jest
+
     - name: API Server Test
       before_install:
         - cd ./api-server
@@ -31,3 +31,18 @@ jobs:
         - npm install
       script:
         - npm run test
+    - stage: Deploy
+      name: Deploy Client
+      before_script:
+        - cd ./client
+        - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+      script:
+        - docker build -t wltn3231/test-client:v3 .
+        - docker push wltn3231/test-client:v3
+    - name: Deploy Server
+      before_script:
+        - cd ./server
+        - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
+      script:
+        - docker build -t wltn3231/test-server:v3 .
+        - docker push wltn3231/test-server:v3
