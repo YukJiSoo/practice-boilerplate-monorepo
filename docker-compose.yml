@@ -27,9 +27,9 @@ services:
     networks:
       - cocode-backend
 
-  mongo:
+  database:
     container_name: cocode-mongodb
-    image: mongo:3.6.15-xenial
+    image: mongo:latest
     restart: always
     volumes:
       - data:/data/db
