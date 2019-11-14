@@ -4,25 +4,26 @@ node_js:
 cache: npm
 services:
   - docker
-env:
-  global:
-    - DOCKER_USERNAME=wltn3231
-    - secure: qudprqD0YV1Q8UeH7cT1dumQI4UzqdCJrtj3TDUGSvJ5zgkTlxDv0DIzXXS39ASWYHGs3iB2/yl/yipY24Z6DnbjVLR+dxeoZqNqckf6ZXdvEq+3NUVkCPUK61b9tMDQOH2Le4PYsQ661XpLxwBLD2hkw0UeYL4lxLwxCVFXY0m9rSwTiQeVow0xWmn4FlRBlc/4SjxIijfbLo5wqLxrKoXGmGaa75EZKAWyB9ayT0wS47kLoJrqbi4nrYIK8nbQY16Da82+FDjIJoq1zKMbKvOkcBCKE0XHodfY9MP81h4tawVxSu2yB/iKAyg0OrJC96AXodM2H8zP8F8g71IXYMtz1vy6ulu2VpfWoEC+nTI5xUIHfLVNepNtbQAFP0/gT9TMVSYVYQUNHs+6dxBI3CU505fo4UDMOh81rFaR7E2UoX9rf83iaoHtshI/jtTogoZ+VNn8cLRTEXmYn/42/Ik4TEdR+AU2Yb4d+u4evXvNxRtK7vwTEqVLp+ZG/PbW5IORApdLiwlH0Ut4oItMg+5vw7DTRQnz3XUM6/d4yRLCBGX2xcsfzythoz6CM8NGOH1DdscZ+zrjfLISbUhNDjwglUMiE5xSorcipnemiRmAcXqRa1aLb9LG1Kg3D9svvaogW0MsK6WHWG0zkz1mpTs5i3Fx9VqjvRHFeDyKOo8=
 
 jobs:
   include:
     - stage: Tests
-      if: env(TRAVIS_PULL_REQUEST) = cocode
       env:
         - SKIP_PREFLIGHT_CHECK=true
       name: Client Test
       script:
         - echo "client test"
-
     - name: API Server Test
-      if: env(TRAVIS_PULL_REQUEST) = master
       script:
         - echo "server test"
+
+    - stage: Deploy
+      name: Client Deploy
+      script:
+        - echo "client deploy"
+    - name: API Server Deploy
+      script:
+        - echo "server deploy"
     # - stage: Tests
     #   env:
     #     - SKIP_PREFLIGHT_CHECK=true
