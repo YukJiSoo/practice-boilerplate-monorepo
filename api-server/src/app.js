@@ -15,7 +15,7 @@ db.once('open', function() {
 	console.log('connected to Mongo');
 });
 
-mongoose.connect('mongodb://database:27017/project', {
+mongoose.connect('mongodb://106.10.51.160:27017/project', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 });
