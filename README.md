@@ -1,4 +1,4 @@
-## proxy + client + api-server + database server boilerplate
+## proxy + client + api-server + database server boilerplater
 
 docker compose를 이용한 개발 및 배포 환경 boilerplate
 

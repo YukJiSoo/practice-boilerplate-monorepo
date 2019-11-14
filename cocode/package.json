@@ -10,19 +10,6 @@
 		"build:dev": "webpack --develope",
 		"test": "react-scripts test"
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "jest && lint-staged",
-			"pre-push": "jest",
-			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-		}
-	},
-	"lint-staged": {
-		"*.js": [
-			"eslint --fix",
-			"git add"
-		]
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/connect-foundation/2019-04"

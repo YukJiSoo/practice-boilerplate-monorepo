@@ -8,19 +8,6 @@
 		"start": "babel-node src/app.js",
 		"test": "jest"
 	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm test && lint-staged",
-			"pre-push": "npm test",
-			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-		}
-	},
-	"lint-staged": {
-		"*.js": [
-			"eslint --fix",
-			"git add"
-		]
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/connect-foundation/2019-04"
