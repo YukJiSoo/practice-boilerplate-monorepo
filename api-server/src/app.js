@@ -7,7 +7,7 @@ import cors from 'cors';
 import Project from './model/Project';
 
 const app = express();
-const PORT = 4000;
+const PORT = 3030;
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -24,11 +24,7 @@ const WHITE_LIST = ['http://localhost:3000', 'http://localhost'];
 
 const corsOptions = {
 	origin: function(origin, callback) {
-		if (WHITE_LIST.indexOf(origin) !== -1) {
-			callback(null, true);
-		} else {
-			callback(new Error('Not allowed by CORS'));
-		}
+		callback(null, true);
 	},
 	exposedHeaders: ['Set-Cookie'],
 	credentials: true
