@@ -9,7 +9,6 @@ env:
     - REGISTRY=45.119.146.88:5000
     - DOCKER_USERNAME=cocode
     - DEPLOY_IP=45.119.146.88
-    - secure: SG9i4vK9+tkObQoukgKF4Jk27L4ki9Vmf8pO4ZAOEzueHfwHrgqG4YZzg6YpY1jIs7TYb4dt7zWoSW6TZm933ZR3n6P26MZp/N/hlaSKFAsfI3NsJN4nZiMDM0TaEEjZMwQerWpfLBcyKh8HkKy30qEDVvaqg0Qd8XqVYF79wCpLKC4YEwVEGNR9uYsyZPBwFGcCIdT8EwqJAsZ64JwTNcJrj+Gqr+OgsNv7cwX15Gl7C3+bNOYUZPLpAzrVpl+vsKTNwWXGUelGGWFQF4m8YUrZ9ubgDZ6NiLsypTFi0Bc2XPjG0iGz04sK4O01CoXSXQxRqrjm1Mv1fpPppJwePIwGTs2wSngqh5sxADslYHR/SCzgb0otKGtD1Z2meOnXyZY3ICsprIo/ENP8VOXL1nDUK0pZ5aiVJhGZpJsXK3aQVvW/mlKI6/o8khUeFjHkFeNonmHUAZBaHimYuOru3MwTeUeS0l1eYrY7Y76GndUxGjv+ieLwn5JumR95147rLh1aRiABB/5ldmpGvCNsSel0i4Hf2jMBipjsVJN3bqAn7QtTCW7P6hkquUXes8cPO6wwzqQcF++iNlsZeG0j7OQnUU9B6VW6gohluInYj3FIFZJ5d5OoAtynPe6u5hnLFkeoq2HJ4jOr6mCOD3U5YX5GgLdyWpPvPpMLZI29/SI=
     - secure: DxfO29Z5NFQu1x3UlLmrN1QF7EZ4IIv7kS65fWoNogccKh0GE7WLNhmXp9EcZL4/qhf8gLNzMPCYq1Y2Wsnjkxw5h3E0M4/LjWQAgw16iTnP5oTjAX87GwGpr2WwTNJhBl+dRylPiVvfPMhEKUHuVyPNl42kAfJSo54se0YX2Fes2twIiRzUH3mFRbmKEpp0lSO7Gq7+4Q2Gpq24+O/sQ80qnF+RmNhuSeD27qPpl1WNU550Dt4I6InshIv6H5RB1Fk47pg6K76Wx/xCVrPvo9xDwTNh6wukqiPU8Eo6WYyF9r471KUgDfpM5ecyrasFSuc+wN0RAtNSWOZJUL2kHi8v6TB0IEaQFez2TSJ4t8u+laJ9cS6GrLixPFXX6OLyzjd2JVh1QSIBrksfxTI5X/n2hfHsuX9q2j8ChQYHbtA5YHsh0hBNqO9sztt+0kEJVuEavY1Oufxs6HH20PKeAvL8Oh/AOnjuSPFizdKZf4cmT4OXNiiwGw5cuKJ8AER5fMxp8z/0rKKsFCdyTUmGCNnVhhewxth8p+edCD/bgLRewy9vM3RKvud6edz9Y8tavj85oRe9fAHvpmLIOy4SvUBZ12WQQzTL9jruuqB1k+/DRy4hOhsqVh7vIjvqe74Qa6JuojMezm4L3vl7qRaOXgNQdKG/Ugv2J1VAJ1Vdaog=
 jobs:
   include:
@@ -18,6 +17,7 @@ jobs:
         - sudo cat /etc/docker/daemon.json
         - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}''
           | sudo tee /etc/docker/daemon.json'
+        - sudo systemctl restart docker
         - sudo cat /etc/docker/daemon.json
         - sudo apt-get install sshpass
       script:
