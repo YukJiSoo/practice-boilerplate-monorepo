@@ -15,7 +15,6 @@ jobs:
     - stage: Deploy
       before_install:
         - cd api-server
-        - openssl aes-256-cbc -K $encrypted_6d77f8a8a2ab_key -iv $encrypted_6d77f8a8a2ab_iv -in .env.enc -out .env -d
       before_script:
         - sudo apt-get install sshpass
         - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
@@ -32,3 +31,6 @@ jobs:
           else
               echo "${SERVICE} nono!"
           fi
+before_install:
+  - openssl aes-256-cbc -K $encrypted_4f20d19946f1_key -iv $encrypted_4f20d19946f1_iv -in env_enc.tar.enc -out env_enc.tar -d
+  - tar xvf env_enc.tar
