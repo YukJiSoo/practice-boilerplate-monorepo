@@ -5,7 +5,7 @@ import * as babel from '@babel/core';
 import reactPreset from '@babel/preset-react';
 import axios from 'axios';
 
-const API_SERVER_ADDRESS = 'http://localhost:3030/api';
+const API_SERVER_ADDRESS = `${process.env.API_SERVER_IP}/api`;
 const FETCH_OPTION = {
 	crossDomain: true,
 	method: 'GET',
@@ -95,7 +95,7 @@ function App() {
 		<div>
 			<Grid container xs={12}>
 				<Grid xs={12}>
-					<h1>데이터 통신 테스트</h1>
+					<h1>docker 데이터 통신 테스트</h1>
 					{projects.map((project, index) => (
 						<div key={index}>{project}</div>
 					))}

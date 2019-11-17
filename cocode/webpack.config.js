@@ -1,6 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const dotenv = require('dotenv');
+const env = dotenv.config().parsed;
+const envKeys = Object.keys(env).reduce((prev, next) => {
+	prev[`process.env.${next}`] = JSON.stringify(env[next]);
+	return prev;
+}, {});
+
 module.exports = {
 	devtool: 'cheap-module-eval-source-map',
 	mode: 'development',
@@ -25,7 +32,10 @@ module.exports = {
 	resolve: {
 		extensions: ['*', '.js', '.jsx', '.css']
 	},
-	plugins: [new webpack.HotModuleReplacementPlugin()],
+	plugins: [
+		new webpack.HotModuleReplacementPlugin(),
+		new webpack.DefinePlugin(envKeys)
+	],
 	devServer: {
 		clientLogLevel: 'silent',
 		disableHostCheck: true,
