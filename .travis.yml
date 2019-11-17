@@ -15,29 +15,22 @@ env:
 jobs:
   include:
     - stage: Deploy
+      before_install:
+        - cd cocode
+        - openssl aes-256-cbc -K $encrypted_6d77f8a8a2ab_key -iv $encrypted_6d77f8a8a2ab_iv -in .env.enc -out .env -d
       before_script:
         - sudo apt-get install sshpass
-        # - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-        # - sudo cat /etc/docker/daemon.json
-        # - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}''
-        #   | sudo tee /etc/docker/daemon.json'
-        # - sudo systemctl restart docker
+        - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
       script:
         - echo "deploy"
-        # - cd api-server
-        # - docker build -t "$DOCKER_USER"/api-server:1.0 .
-        # - docker tag "$DOCKER_USER"/api-server:1.0 "$DOCKER_USER"/api-server:latest
-        # - docker push "$DOCKER_USER"/api-server:latest && docker push "$DOCKER_USER"/api-server:1.0
-        # - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" /root/practice-boilerplate-monorepo/script/deploy.sh cocode
+        - docker build -t "$DOCKER_USER"/cocode:1.0 .
+        - docker tag "$DOCKER_USER"/cocode:1.0 "$DOCKER_USER"/cocode:latest
+        - docker push "$DOCKER_USER"/cocode:latest && docker push "$DOCKER_USER"/cocode:1.0
         - |
           if [ "${SERVICE}" = "cocode" ]; then
-              sshpass -p "${COCODE_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${COCODE_IP}" touch success
+              sshpass -p "${COCODE_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${COCODE_IP}" /root/practice-boilerplate-monorepo/script/deploy.sh "$SERVICE" 80
           elif [ "${SERVICE}" = "api-server" ]; then
-              sshpass -p "${API_SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${API_SERVER_IP}" echo "api-server"
+              sshpass -p "${API_SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${API_SERVER_IP}" /root/practice-boilerplate-monorepo/script/deploy.sh "$SERVICE" 3030
           else
               echo "${SERVICE} nono!"
           fi
-        # - docker images
-        # - docker push "$REGISTRY"/cocode/api:1.0
-        # - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP"
-        # /root/practice-boilerplate-monorepo/script/deploy.sh "$DOCKER_USERNAME"

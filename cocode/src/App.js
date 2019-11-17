@@ -5,7 +5,12 @@ import * as babel from '@babel/core';
 import reactPreset from '@babel/preset-react';
 import axios from 'axios';
 
-const API_SERVER_ADDRESS = `${process.env.API_SERVER_IP}/api`;
+console.log(process.env.NODE_ENV);
+const API_SERVER_ADDRESS =
+	process.env.NODE_ENV === 'production'
+		? `${process.env.PROD_API_SERVER_IP}/api`
+		: `${process.env.DEV_API_SERVER_IP}/api`;
+
 const FETCH_OPTION = {
 	crossDomain: true,
 	method: 'GET',

@@ -1,14 +1,10 @@
 #!/bin/sh
-echo "$(cat .bashrc)"
-
 SERVICE="$1"
+PORT="$2"
 echo "deploy service: ${SERVICE}"
-source .bashrc
+echo "on port: ${PORT}"
 
-if [ "${SERVICE}" = "cocode" ]; then
-    sshpass -p "${COCODE_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${COCODE_IP}" echo "cocode"
-elif [ "${SERVICE}" = "api-server" ]; then
-    sshpass -p "${API_SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${API_SERVER_IP}" echo "api-server"
-else
-    echo "${SERVICE} nono!"
-fi
+docker pull wltn3231/${SERVICE}
+docker stop ${SERVICE}
+docker rm ${SERVICE}
+docker run --name=${SERVICE} -d -p ${PORT}:${PORT} wltn3231/${SERVICE}

@@ -1,13 +1,22 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import mongoose, { connection } from 'mongoose';
+import mongoose from 'mongoose';
 import cors from 'cors';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 import Project from './model/Project';
 
 const app = express();
 const PORT = 3030;
+const {
+	DATABASE_DIALECT,
+	DATABASE_HOST,
+	DATABASE_PORT,
+	DATABASE_NAME
+} = process.env;
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -15,10 +24,13 @@ db.once('open', function() {
 	console.log('connected to Mongo');
 });
 
-mongoose.connect('mongodb://106.10.51.160:27017/project', {
-	useNewUrlParser: true,
-	useUnifiedTopology: true
-});
+mongoose.connect(
+	`${DATABASE_DIALECT}://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`,
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true
+	}
+);
 
 const WHITE_LIST = ['http://localhost:3000', 'http://localhost'];
 
