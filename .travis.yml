@@ -4,70 +4,28 @@ node_js:
 cache: npm
 services:
   - docker
-
 env:
   global:
     - REGISTRY=45.119.146.88:5000
     - DOCKER_USERNAME=cocode
-    # - DEPLOY_IP=
-    # - DEPLOY_PASSWORD=
+    - DEPLOY_IP=45.119.146.88
+    - secure: SG9i4vK9+tkObQoukgKF4Jk27L4ki9Vmf8pO4ZAOEzueHfwHrgqG4YZzg6YpY1jIs7TYb4dt7zWoSW6TZm933ZR3n6P26MZp/N/hlaSKFAsfI3NsJN4nZiMDM0TaEEjZMwQerWpfLBcyKh8HkKy30qEDVvaqg0Qd8XqVYF79wCpLKC4YEwVEGNR9uYsyZPBwFGcCIdT8EwqJAsZ64JwTNcJrj+Gqr+OgsNv7cwX15Gl7C3+bNOYUZPLpAzrVpl+vsKTNwWXGUelGGWFQF4m8YUrZ9ubgDZ6NiLsypTFi0Bc2XPjG0iGz04sK4O01CoXSXQxRqrjm1Mv1fpPppJwePIwGTs2wSngqh5sxADslYHR/SCzgb0otKGtD1Z2meOnXyZY3ICsprIo/ENP8VOXL1nDUK0pZ5aiVJhGZpJsXK3aQVvW/mlKI6/o8khUeFjHkFeNonmHUAZBaHimYuOru3MwTeUeS0l1eYrY7Y76GndUxGjv+ieLwn5JumR95147rLh1aRiABB/5ldmpGvCNsSel0i4Hf2jMBipjsVJN3bqAn7QtTCW7P6hkquUXes8cPO6wwzqQcF++iNlsZeG0j7OQnUU9B6VW6gohluInYj3FIFZJ5d5OoAtynPe6u5hnLFkeoq2HJ4jOr6mCOD3U5YX5GgLdyWpPvPpMLZI29/SI=
 
 jobs:
   include:
-    # - stage: Tests
-    #   env:
-    #     - SKIP_PREFLIGHT_CHECK=true
-    #   name: Client Test
-    #   script:
-    #     - echo "client test"
-    # - name: API Server Test
-    #   script:
-    #     - echo "server test"
-
     - stage: Deploy
       before_script:
         - sudo cat /etc/docker/daemon.json
-        - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}'' | sudo tee /etc/docker/daemon.json'
+        - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}''
+          | sudo tee /etc/docker/daemon.json'
         - sudo systemctl restart docker
         - sudo cat /etc/docker/daemon.json
-      #   - sudo apt-get install sshpass
+        - sudo apt-get install sshpass
       script:
         - echo "deploy"
         - cd api-server
         - docker build -t "$REGISTRY"/cocode/api:1.0 .
         - docker images
-
         - docker push "$REGISTRY"/cocode/api:1.0
-        # - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" "/root/practice-boilerplate-monorepo/$BRANCH/execute.sh"
-    # - stage: Tests
-    #   env:
-    #     - SKIP_PREFLIGHT_CHECK=true
-    #   name: Cocode Client Test
-    #   before_install:
-    #     - cd ./cocode
-    #   install:
-    #     - yarn install
-    #   script:
-    #     - yarn jest
-    # - name: API Server Test
-    #   before_install:
-    #     - cd ./api-server
-    #   install:
-    #     - npm install
-    #   script:
-    #     - npm run test
-    # - stage: Deploy
-    #   name: Deploy Client
-    #   before_script:
-    #     - cd ./cocode
-    #     - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-    #   script:
-    #     - docker build -t wltn3231/test-client:v3 .
-    #     - docker push wltn3231/test-client:v3
-    # - name: Deploy Server
-    #   before_script:
-    #     - cd ./api-server
-    #     - echo "$DOCKER_PASSWORD" | docker login -u "${DOCKER_USERNAME}" --password-stdin
-    #   script:
-    #     - docker build -t wltn3231/test-server:v3 .
-    #     - docker push wltn3231/test-server:v3
+        - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP"
+          "echo 'access'"
