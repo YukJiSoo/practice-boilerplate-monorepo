@@ -10,7 +10,6 @@ const envKeys = Object.keys(env).reduce((prev, next) => {
 
 module.exports = {
 	devtool: 'cheap-module-eval-source-map',
-	mode: 'development',
 	entry: ['@babel/polyfill', __dirname + '/src/index.js'],
 	output: {
 		path: __dirname + '/public',
