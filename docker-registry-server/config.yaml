@@ -1,0 +1,6 @@
+registry:
+  url: http://45.119.146.88:5000/v2
+  name: 45.119.146.88:5000
+  readonly: false
+  auth:
+    enabled: false

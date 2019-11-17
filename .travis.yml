@@ -27,4 +27,4 @@ jobs:
         - docker build -t "$REGISTRY"/cocode/api:1.0 .
         - docker images
         - docker push "$REGISTRY"/cocode/api:1.0
-        - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" /root/practice-boilerplate-monorepo/script/deploy.sh "DOCKER_USERNAME"
+        - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" /root/practice-boilerplate-monorepo/script/deploy.sh "$DOCKER_USERNAME"
