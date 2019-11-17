@@ -15,11 +15,7 @@ jobs:
   include:
     - stage: Deploy
       before_script:
-        - sudo cat /etc/docker/daemon.json
-        - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}''
-          | sudo tee /etc/docker/daemon.json'
-        - sudo systemctl restart docker
-        - sudo cat /etc/docker/daemon.json
+        - ./script/accept-http-in-docker.sh
         - sudo apt-get install sshpass
       script:
         - echo "deploy"
@@ -28,4 +24,4 @@ jobs:
         - docker images
         - docker push "$REGISTRY"/cocode/api:1.0
         - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP"
-          "echo 'access'"
+          "touch /root/success"
