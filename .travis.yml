@@ -2,10 +2,6 @@ language: node_js
 node_js:
   - 12
 cache: npm
-script:
-  - sudo cat /etc/docker/daemon.json
-  - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}'' | sudo tee /etc/docker/daemon.json'
-  - sudo cat /etc/docker/daemon.json
 services:
   - docker
 env:
@@ -24,6 +20,9 @@ jobs:
         # - sudo service docker restart
         # - sudo cat /etc/docker/daemon.json
         - sudo apt-get install sshpass
+        - sudo cat /etc/docker/daemon.json
+        - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}'' | sudo tee /etc/docker/daemon.json'
+        - sudo cat /etc/docker/daemon.json
       script:
         - echo "deploy"
         - cd api-server
