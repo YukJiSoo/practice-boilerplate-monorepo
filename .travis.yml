@@ -15,7 +15,7 @@ jobs:
   include:
     - stage: Deploy
       before_script:
-        - ./script/accept-http-in-docker.sh
+        - sudo ./script/accept-http-in-docker.sh
         - sudo apt-get install sshpass
       script:
         - echo "deploy"
