@@ -25,14 +25,15 @@ jobs:
     #     - echo "server test"
 
     - stage: Deploy
-      # before_script:
+      before_script:
+        - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}'' | sudo tee /etc/docker/daemon.json'
       #   - sudo apt-get install sshpass
       script:
         - echo "deploy"
         - cd api-server
         - docker build -t "$REGISTRY"/cocode/api:1.0 .
         - docker images
-        - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}'' | sudo tee /etc/docker/daemon.json'
+
         - docker push "$REGISTRY"/cocode/api:1.0
         # - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" "/root/practice-boilerplate-monorepo/$BRANCH/execute.sh"
     # - stage: Tests
