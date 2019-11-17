@@ -6,31 +6,29 @@ services:
   - docker
 env:
   global:
-    - REGISTRY=45.119.146.88:5000
     - DOCKER_USER=wltn3231
-    - DEPLOY_IP=45.119.146.88
-    - SERVICE=cocode
+    - SERVICE=api-server
     - secure: DxfO29Z5NFQu1x3UlLmrN1QF7EZ4IIv7kS65fWoNogccKh0GE7WLNhmXp9EcZL4/qhf8gLNzMPCYq1Y2Wsnjkxw5h3E0M4/LjWQAgw16iTnP5oTjAX87GwGpr2WwTNJhBl+dRylPiVvfPMhEKUHuVyPNl42kAfJSo54se0YX2Fes2twIiRzUH3mFRbmKEpp0lSO7Gq7+4Q2Gpq24+O/sQ80qnF+RmNhuSeD27qPpl1WNU550Dt4I6InshIv6H5RB1Fk47pg6K76Wx/xCVrPvo9xDwTNh6wukqiPU8Eo6WYyF9r471KUgDfpM5ecyrasFSuc+wN0RAtNSWOZJUL2kHi8v6TB0IEaQFez2TSJ4t8u+laJ9cS6GrLixPFXX6OLyzjd2JVh1QSIBrksfxTI5X/n2hfHsuX9q2j8ChQYHbtA5YHsh0hBNqO9sztt+0kEJVuEavY1Oufxs6HH20PKeAvL8Oh/AOnjuSPFizdKZf4cmT4OXNiiwGw5cuKJ8AER5fMxp8z/0rKKsFCdyTUmGCNnVhhewxth8p+edCD/bgLRewy9vM3RKvud6edz9Y8tavj85oRe9fAHvpmLIOy4SvUBZ12WQQzTL9jruuqB1k+/DRy4hOhsqVh7vIjvqe74Qa6JuojMezm4L3vl7qRaOXgNQdKG/Ugv2J1VAJ1Vdaog=
     - secure: fFstO4pSPcf6X9NJIExCMZjJJy0vEcP2gDBVdbocps/VMQaxKWMr0YlSA9k24HMH5z2fYd+KKAaPpCwh+2NX6xsfIrpEsuIrbZSg/TsEasOH0mRWe8ovXV8cFlgRHULk7dK7Hnv9altHJV4omnVGOPCZlAywhfhff076Jrnga/Z08+KEQ5E2Q7ZOFPZrGniQUw5aSGZAmCY+R4R3fGZJgwP5qFM+lPUVOLDktsxesHt+p387rlCSMDNYqVJyiWlEoHQKAXD9AXassSeWJL4xHyp9kr8IPmSubC/4rS2Aoj/CzUnkA3paj2ZmDEN5tpqM3p3L49MgTMQ24Qlt4KZ54WWkK5876b24aLzecCMsLY6jI/Q9vHg7oK4mvSKRm6b2/KYpTPgAVdLGm7BPYQRhKob0kiz7UygFil6gn4EQskxWzkNxxOMy6dpHVvLz1QUWMhPqjEEs+PlCKdwZp7wR26mLTOBthX1ZwuoMoUxb0NJzacf26DY8h5ETqo/w6Ccey4hEb0wwXItoI40t/bDqmLiDEk5DhLSeZmRz8J4pFy3aaFRTdMe0pS/8J+AQu+NJv9A9dpeu0xZJfgJ4MGS7TTGfXj/UpHwSLsMoZKf+dzih/tep83YqlUmvZYMtFlVLjPN44/4mQg2XjDUdHpKeP5b2n7ochGZ27kEgH1GXftY=
 jobs:
   include:
     - stage: Deploy
       before_install:
-        - cd cocode
+        - cd api-server
         - openssl aes-256-cbc -K $encrypted_6d77f8a8a2ab_key -iv $encrypted_6d77f8a8a2ab_iv -in .env.enc -out .env -d
       before_script:
         - sudo apt-get install sshpass
         - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
       script:
-        - echo "deploy"
-        - docker build -t "$DOCKER_USER"/cocode:1.0 .
-        - docker tag "$DOCKER_USER"/cocode:1.0 "$DOCKER_USER"/cocode:latest
-        - docker push "$DOCKER_USER"/cocode:latest && docker push "$DOCKER_USER"/cocode:1.0
+        - echo "deploy ${SERVICE}"
+        - docker build -t "$DOCKER_USER"/"$SERVICE":1.0 .
+        - docker tag "$DOCKER_USER"/"$SERVICE":1.0 "$DOCKER_USER"/"$SERVICE":latest
+        - docker push "$DOCKER_USER"/"$SERVICE":latest && docker push "$DOCKER_USER"/"$SERVICE":1.0
         - |
           if [ "${SERVICE}" = "cocode" ]; then
-              sshpass -p "${COCODE_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${COCODE_IP}" /root/practice-boilerplate-monorepo/script/deploy.sh "$SERVICE" 80
+              sshpass -p "${COCODE_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${COCODE_IP}" /root/practice-boilerplate-monorepo/script/deploy.sh "$SERVICE" "$COCODE_PORT"
           elif [ "${SERVICE}" = "api-server" ]; then
-              sshpass -p "${API_SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${API_SERVER_IP}" /root/practice-boilerplate-monorepo/script/deploy.sh "$SERVICE" 3030
+              sshpass -p "${API_SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${API_SERVER_IP}" /root/practice-boilerplate-monorepo/script/deploy.sh "$SERVICE" "$API_SERVER_PORT"
           else
               echo "${SERVICE} nono!"
           fi

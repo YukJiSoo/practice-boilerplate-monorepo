@@ -4,8 +4,8 @@
 	"description": "cocode api service",
 	"main": "app.js",
 	"scripts": {
-		"dev": "nodemon --exec babel-node src/app.js",
-		"start": "babel-node src/app.js",
+		"dev": "NODE_ENV=development nodemon --exec babel-node src/app.js",
+		"start": "NODE_ENV=production babel-node src/app.js",
 		"test": "jest"
 	},
 	"repository": {

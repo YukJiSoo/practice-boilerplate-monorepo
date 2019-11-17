@@ -4,19 +4,18 @@ import logger from 'morgan';
 import mongoose from 'mongoose';
 import cors from 'cors';
 
+import Project from './model/Project';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
-import Project from './model/Project';
-
 const app = express();
+
 const PORT = 3030;
-const {
-	DATABASE_DIALECT,
-	DATABASE_HOST,
-	DATABASE_PORT,
-	DATABASE_NAME
-} = process.env;
+const MONGODB_URI =
+	process.env.NODE_ENV === 'production'
+		? process.env.PROD_DATABASE_URI
+		: process.env.DEV_DATABASE_URI;
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -24,13 +23,10 @@ db.once('open', function() {
 	console.log('connected to Mongo');
 });
 
-mongoose.connect(
-	`${DATABASE_DIALECT}://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}`,
-	{
-		useNewUrlParser: true,
-		useUnifiedTopology: true
-	}
-);
+mongoose.connect(MONGODB_URI, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+});
 
 const WHITE_LIST = ['http://localhost:3000', 'http://localhost'];
 
