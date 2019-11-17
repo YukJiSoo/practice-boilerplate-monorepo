@@ -1,6 +1,8 @@
 #!/bin/sh
-
+echo "test: ${DEPLOY_IP}"
 echo "$(pwd)"
+echo "$(ls)"
+echo "$(ls -al)"
 ./test.sh
 
 SERVICE="$1"

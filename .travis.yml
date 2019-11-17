@@ -16,17 +16,17 @@ jobs:
     - stage: Deploy
       before_script:
         - sudo apt-get install sshpass
-        - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+        # - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
         # - sudo cat /etc/docker/daemon.json
         # - 'sudo cat /etc/docker/daemon.json | jq ''. + {"insecure-registries": ["45.119.146.88:5000"]}''
         #   | sudo tee /etc/docker/daemon.json'
         # - sudo systemctl restart docker
       script:
         - echo "deploy"
-        - cd api-server
-        - docker build -t "$DOCKER_USER"/api-server:1.0 .
-        - docker tag "$DOCKER_USER"/api-server:1.0 "$DOCKER_USER"/api-server:latest
-        - docker push "$DOCKER_USER"/api-server:latest && docker push "$DOCKER_USER"/api-server:1.0
+        # - cd api-server
+        # - docker build -t "$DOCKER_USER"/api-server:1.0 .
+        # - docker tag "$DOCKER_USER"/api-server:1.0 "$DOCKER_USER"/api-server:latest
+        # - docker push "$DOCKER_USER"/api-server:latest && docker push "$DOCKER_USER"/api-server:1.0
         - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" /root/practice-boilerplate-monorepo/script/deploy.sh cocode
         # - docker images
         # - docker push "$REGISTRY"/cocode/api:1.0
