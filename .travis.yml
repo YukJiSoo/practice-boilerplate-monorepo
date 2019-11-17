@@ -27,7 +27,8 @@ jobs:
         - echo "deploy"
         - cd api-server
         - docker build -t cocode/"$DOCKER_USERNAME" .
-        - docker push "$REGISTRY"/cocode:latest
+        - docker push "$REGISTRY"/cocode/"$DOCKER_USERNAME"
+        - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" "/home/cocode/$BRANCH/execute.sh"
     # - stage: Tests
     #   env:
     #     - SKIP_PREFLIGHT_CHECK=true
