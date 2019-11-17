@@ -30,9 +30,8 @@ jobs:
       script:
         - echo "deploy"
         - cd api-server
-        - docker build -t cocode:"$DOCKER_USERNAME" .
-        - docker tag cocode:"$DOCKER_USERNAME" "$REGISTRY"/cocode:"$DOCKER_USERNAME" .
-        - docker push "$REGISTRY"/cocode:"$DOCKER_USERNAME"
+        - docker build -t cocode .
+        - docker push "$REGISTRY"/cocode
         # - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" "/root/practice-boilerplate-monorepo/$BRANCH/execute.sh"
     # - stage: Tests
     #   env:
