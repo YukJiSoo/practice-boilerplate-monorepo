@@ -14,12 +14,8 @@ jobs:
     - stage: Test
       script:
         - echo "test"
-        - export SERVICE=$(echo $TRAVIS_PULL_REQUEST_BRANCH)
-        - echo "$SERVICE"
-        - export SERVICE_A=$TRAVIS_PULL_REQUEST_BRANCH
-        - echo "$SERVICE_A"
     - stage: Deploy
-      if: branch = cocode AND type = pull_request
+      if: branch = master AND type = pull_request
       before_install:
         - openssl aes-256-cbc -K $encrypted_4f20d19946f1_key -iv $encrypted_4f20d19946f1_iv -in env.tar.enc -out env.tar -d
         - tar xvf env.tar
@@ -27,8 +23,7 @@ jobs:
         - sudo apt-get install sshpass
       before_script:
         - echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-        - export SERVICE=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH;
-          else echo $TRAVIS_PULL_REQUEST_BRANCH; fi)
+        - export SERVICE=$TRAVIS_PULL_REQUEST_BRANCH
       script:
         - echo "deploy ${SERVICE} service"
         - cd "$SERVICE"
