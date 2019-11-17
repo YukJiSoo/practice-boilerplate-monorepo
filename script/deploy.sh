@@ -1,9 +1,11 @@
 #!/bin/sh
 
-pwd
+echo "$(pwd)"
 
 SERVICE="$1"
 echo "deploy service: ${SERVICE}"
 
-cd $SERVICE
+cd practice-boilerplate-monorepo/$SERVICE
 pwd
+
+echo "$(pwd)"
