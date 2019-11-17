@@ -12,22 +12,22 @@ env:
 
 jobs:
   include:
-    - stage: Tests
-      env:
-        - SKIP_PREFLIGHT_CHECK=true
-      name: Client Test
-      script:
-        - echo "client test"
-    - name: API Server Test
-      script:
-        - echo "server test"
+    # - stage: Tests
+    #   env:
+    #     - SKIP_PREFLIGHT_CHECK=true
+    #   name: Client Test
+    #   script:
+    #     - echo "client test"
+    # - name: API Server Test
+    #   script:
+    #     - echo "server test"
 
     - stage: Deploy
       script:
         - echo "deploy"
         - cd api-server
         - docker build -t cocode/"$DOCKER_USERNAME" .
-        - docker push "$REGISTRY"/cocode:latest .
+        - docker push "$REGISTRY"/cocode:latest
     # - stage: Tests
     #   env:
     #     - SKIP_PREFLIGHT_CHECK=true
