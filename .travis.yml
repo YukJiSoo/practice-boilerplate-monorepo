@@ -5,6 +5,11 @@ cache: npm
 services:
   - docker
 
+env:
+  global:
+    - REGISTRY=45.119.146.88:5000
+    - DOCKER_USERNAME=cocode
+
 jobs:
   include:
     - stage: Tests
@@ -18,12 +23,11 @@ jobs:
         - echo "server test"
 
     - stage: Deploy
-      name: Client Deploy
       script:
-        - echo "client deploy"
-    - name: API Server Deploy
-      script:
-        - echo "server deploy"
+        - echo "deploy"
+        - cd api-server
+        - docker build -t cocode/"$DOCKER_USERNAME" .
+        - docker push "$REGISTRY"/cocode:latest .
     # - stage: Tests
     #   env:
     #     - SKIP_PREFLIGHT_CHECK=true

@@ -12,8 +12,6 @@ services:
     volumes:
       - ./api-server/:/usr/src/app
       - ./api-server/node_modules:/usr/src/app/node_modules
-    networks:
-      - cocode-backend
 
   cocode-client:
     container_name: cocode-client
