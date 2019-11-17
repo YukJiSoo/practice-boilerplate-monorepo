@@ -9,6 +9,8 @@ env:
   global:
     - REGISTRY=45.119.146.88:5000
     - DOCKER_USERNAME=cocode
+    # - DEPLOY_IP=
+    # - DEPLOY_PASSWORD=
 
 jobs:
   include:
@@ -23,12 +25,15 @@ jobs:
     #     - echo "server test"
 
     - stage: Deploy
+      # before_script:
+      #   - sudo apt-get install sshpass
       script:
         - echo "deploy"
         - cd api-server
-        - docker build -t cocode/"$DOCKER_USERNAME" .
-        - docker push "$REGISTRY"/cocode/"$DOCKER_USERNAME"
-        - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" "/home/cocode/$BRANCH/execute.sh"
+        - docker build -t cocode:"$DOCKER_USERNAME" .
+        - docker tag cocode:"$DOCKER_USERNAME" "$REGISTRY"/cocode:"$DOCKER_USERNAME" .
+        - docker push "$REGISTRY"/cocode:"$DOCKER_USERNAME"
+        # - sshpass -p "$DEPLOY_PASSWORD" ssh -o StrictHostKeyChecking=no root@"$DEPLOY_IP" "/root/practice-boilerplate-monorepo/$BRANCH/execute.sh"
     # - stage: Tests
     #   env:
     #     - SKIP_PREFLIGHT_CHECK=true
