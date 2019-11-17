@@ -1,10 +1,13 @@
 #!/bin/sh
 
+echo "$(pwd)"
+./test.sh
+
 SERVICE="$1"
 echo "deploy service: ${SERVICE}"
+source .bashrc
 
 if [ "${SERVICE}" = "cocode" ]; then
-    echo "deploy service: ${COCODE_IP}"
     sshpass -p "${COCODE_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${COCODE_IP}" echo "cocode"
 elif [ "${SERVICE}" = "api-server" ]; then
     sshpass -p "${API_SERVER_PASSWORD}" ssh -o StrictHostKeyChecking=no root@"${API_SERVER_IP}" echo "api-server"
