@@ -1,48 +1,52 @@
-## proxy + client + api-server + database server boilerplater
+## proxy + client + api-server + database server boilerplate
 
-docker compose를 이용한 개발 및 배포 환경 boilerplate
-
-<br>
-
-### 🌈 step1
-
-- json data를 주고받는 client/server 구조 구현
-- client: CRA
-- server: express-generator
+docker, docker compose를 이용한 개발 및 배포 환경 boilerplate
 
 <br>
 
-### 🌈 step2
+### api-server
 
-- docker-compose.yml 으로 nginx + react client server + api server 환경 구성
-- 실행 명령어
+- node.js
+- es6 문법 사용을 위한 babel setting
+
+### cocode
+
+- client server
+- development: webpack-dev-server 이용
+- production: 빌드된 파일을 nginx에서 serving
+
+### mongodb
+
+- database
+- docker-compose로 배포
+
+### proxy
+
+- nginx
+- production에서 client서버와 api서버를 중개해주는데에 사용
+
+### script
+
+- deploy.sh: travis에서 배포시에 실행됨
+- update-env-files.sh: env파일 수정시 실행시켜서 travis에서 배포 시 최신화 할 수 있도록 함
+
+### travis
+
+- test stage는 간소화
+  - push 된 브랜치에서 test script를 실행시키는 것으로 설정 가능
+- deploy stage
+  - 다음과 같은 방식으로 진행 됨
 
 ```
-// 다시 이미지를 빌드하고 컨테이너 실행
-docker-compose up --build
-
-// 백그라운드로 컨테이너 실행
-docker-compose up -d
-
+1. 암호화된 압축 env파일을 풀고 풀어서 저장
+2. dockerhub에 변경된 사항 push
+3. 서비스 서버에 접속하여 배포 지시
 ```
 
-<br>
+### 개발 시
 
-### 🌈 step3
+- docker-compose up --build 명령어로 client, server, db 컨테이너를 실행시켜 빠르게 개발 시작 가능
 
-- docker-compose.yml 에 mongodb 추가
-- 실행명령어 동일
+### 그 외
 
-<br>
-
-### 🌈 step4
-
-- travis를 이용한 CI/CD(delivery) 적용
-- master에 PR을 보내면 travis CI server에 요청
-- CD는 DockerHub에 새로운 이미지를 push하는 것 까지 수행
-
-<br>
-
-### 🌈 step5
-
-- client + server 구조 ci test
+- proxy server와 db server는 초기 셋팅이후에는 따로 배포가 필요없기에 자동화하지 않음
