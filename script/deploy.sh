@@ -1,9 +1,5 @@
 #!/bin/sh
-echo "test: ${DEPLOY_IP}"
-echo "$(pwd)"
-echo "$(ls)"
-echo "$(ls -al)"
-./test.sh
+echo "$(cat .bashrc)"
 
 SERVICE="$1"
 echo "deploy service: ${SERVICE}"
